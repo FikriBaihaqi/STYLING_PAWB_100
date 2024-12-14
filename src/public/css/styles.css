@@ -1,0 +1,20 @@
+/* css/styles.css */
+
+.todo-card {
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease; /* Animasi smooth saat hover */
+}
+
+.todo-card:hover {
+    background-color: #f9f9f9; /* Warna latar belakang berubah saat hover */
+    transform: scale(1.05); /* Meningkatkan ukuran card sedikit */
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15); /* Menambah efek bayangan */
+}
+
+.modal-backdrop {
+    opacity: 0.5 !important;
+}

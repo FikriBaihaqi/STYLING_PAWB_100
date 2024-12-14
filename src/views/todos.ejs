@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for Todo Cards */
+        .todo-card {
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Hover effect for Todo Cards */
+        .todo-card:hover {
+            background-color: #f9f9f9;
+            transform: translateY(-5px); /* Moves the card slightly upward */
+            box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+        }
+
+        .modal-backdrop {
+            opacity: 0.5 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Todo List</h2>
+        <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addTodoModal">Add Todo</button>
+
+        <!-- Todo Cards -->
+        <div class="row" id="todoList">
+            <% todos.forEach(todo => { %>
+                <div class="col-md-4">
+                    <div class="todo-card">
+                        <h5><%= todo.judul %></h5>
+                        <p><%= todo.deskripsi %></p>
+                        <button 
+                            class="btn btn-warning btn-sm" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#editTodoModal" 
+                            onclick="fillEditForm('<%= todo.id %>', '<%= todo.judul %>', '<%= todo.deskripsi %>')">Edit</button>
+                        
+                        <!-- Form for Deleting Todo -->
+                        <form action="/todos/<%= todo.id %>?_method=DELETE" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <!-- Add Todo Modal -->
+    <div class="modal fade" id="addTodoModal" tabindex="-1" aria-labelledby="addTodoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTodoModalLabel">Add Todo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/todos" method="POST">
+                        <div class="mb-3">
+                            <label for="judul" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="judul" name="judul" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deskripsi" class="form-label">Description</label>
+                            <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Todo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Todo Modal -->
+    <div class="modal fade" id="editTodoModal" tabindex="-1" aria-labelledby="editTodoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTodoModalLabel">Edit Todo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm" action="" method="POST">
+                        <input type="hidden" name="_method" value="PUT"> <!-- Method Override -->
+                        <div class="mb-3">
+                            <label for="editJudul" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="editJudul" name="judul" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDeskripsi" class="form-label">Description</label>
+                            <textarea class="form-control" id="editDeskripsi" name="deskripsi" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+        // Function to populate the edit form with the existing Todo data
+        function fillEditForm(id, judul, deskripsi) {
+            const editForm = document.getElementById('editForm');
+            editForm.action = `/todos/${id}?_method=PUT`;  // Set the action to PUT for updating
+            document.getElementById('editJudul').value = judul;  // Set the title
+            document.getElementById('editDeskripsi').value = deskripsi;  // Set the description
+        }
+    </script>
+</body>
+</html>
